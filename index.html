@@ -1164,7 +1164,9 @@
         const portalAuth = firebase.auth();
         const portalDb = firebase.firestore();
         const portalDataRef = portalDb.collection('portalData').doc('main');
+        const portalChunksRef = portalDb.collection('portalDataChunks');
         let portalSnapshotStarted = false;
+        let chunkedStorageActive = false;
         let qualityChartInstance = null;
 
         const SCORE_MATRIX = {
@@ -1300,8 +1302,55 @@
         }
 
 
+        function splitTextIntoChunks(value, maxBytes = 700000) {
+            const chunks = [];
+            let current = '';
+            let currentBytes = 0;
+            const encoder = new TextEncoder();
+            for (const character of value) {
+                const characterBytes = encoder.encode(character).length;
+                if (currentBytes + characterBytes > maxBytes && current) {
+                    chunks.push(current);
+                    current = '';
+                    currentBytes = 0;
+                }
+                current += character;
+                currentBytes += characterBytes;
+            }
+            if (current || chunks.length === 0) chunks.push(current);
+            return chunks;
+        }
+
+        function applyChunkedSnapshot(snapshot) {
+            const grouped = { teachers: [], achievements: [], awards: [], courses: [] };
+            const parts = { teachers: [], achievements: [], awards: [], courses: [] };
+            snapshot.forEach((doc) => {
+                if (doc.id === '__meta__') return;
+                const item = doc.data() || {};
+                if (parts[item.key] && Number.isInteger(item.index)) {
+                    parts[item.key].push({ index: item.index, content: item.content || '' });
+                }
+            });
+            Object.keys(parts).forEach((key) => {
+                parts[key].sort((a, b) => a.index - b.index);
+                if (parts[key].length) {
+                    try {
+                        grouped[key] = JSON.parse(parts[key].map(part => part.content).join(''));
+                        if (!Array.isArray(grouped[key])) grouped[key] = [];
+                    } catch (error) {
+                        console.error('Firestore мәліметтерін оқу қатесі (' + key + '):', error);
+                        grouped[key] = [];
+                    }
+                }
+            });
+            teachers = grouped.teachers;
+            achievements = grouped.achievements;
+            awards = grouped.awards;
+            courses = grouped.courses;
+            renderAll();
+        }
+
         function initApp() {
-            // Портал жаңа базаға бос күйде қосылады; үлгілік жалған жазбалар жүктелмейді.
             teachers = [];
             achievements = [];
             awards = [];
@@ -1310,7 +1359,21 @@
 
             if (!portalSnapshotStarted) {
                 portalSnapshotStarted = true;
+
+                // Жаңа бөлінген құжаттар бар болса, солар негізгі дереккөз болады.
+                portalChunksRef.onSnapshot((snapshot) => {
+                    const hasChunkedData = snapshot.docs.some(doc => doc.id === '__meta__');
+                    if (hasChunkedData) {
+                        chunkedStorageActive = true;
+                        applyChunkedSnapshot(snapshot.docs);
+                    }
+                }, (error) => {
+                    console.error('Firestore бөліктерін оқу қатесі:', error);
+                });
+
+                // Кері үйлесімділік: жаңа құрылым әлі жасалмаған кезде бұрынғы main құжатын оқиды.
                 portalDataRef.onSnapshot((doc) => {
+                    if (chunkedStorageActive) return;
                     if (doc.exists) {
                         const data = doc.data() || {};
                         teachers = Array.isArray(data.teachers) ? data.teachers : [];
@@ -1336,15 +1399,34 @@
                 alert('Мәліметті тек әкімші өзгерте алады.');
                 return;
             }
-            const payload = {
-                teachers,
-                achievements,
-                awards,
-                courses,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
+            const payload = { teachers, achievements, awards, courses };
             try {
-                await portalDataRef.set(payload);
+                const batch = portalDb.batch();
+                const existing = await portalChunksRef.get();
+                const keepIds = new Set(['__meta__']);
+                Object.entries(payload).forEach(([key, records]) => {
+                    const chunks = splitTextIntoChunks(JSON.stringify(records));
+                    chunks.forEach((content, index) => {
+                        const docId = key + '_' + index;
+                        keepIds.add(docId);
+                        batch.set(portalChunksRef.doc(docId), {
+                            key,
+                            index,
+                            total: chunks.length,
+                            content,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    });
+                });
+                batch.set(portalChunksRef.doc('__meta__'), {
+                    schemaVersion: 1,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                existing.forEach((doc) => {
+                    if (!keepIds.has(doc.id)) batch.delete(doc.ref);
+                });
+                await batch.commit();
+                chunkedStorageActive = true;
                 renderAll();
             } catch (error) {
                 console.error('Firestore сақтау қатесі:', error);
