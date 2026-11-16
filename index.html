@@ -1325,7 +1325,7 @@
             const grouped = { teachers: [], achievements: [], awards: [], courses: [] };
             const parts = { teachers: [], achievements: [], awards: [], courses: [] };
             snapshot.forEach((doc) => {
-                if (doc.id === '__meta__') return;
+                if (doc.id === 'metadata') return;
                 const item = doc.data() || {};
                 if (parts[item.key] && Number.isInteger(item.index)) {
                     parts[item.key].push({ index: item.index, content: item.content || '' });
@@ -1362,7 +1362,7 @@
 
                 // Жаңа бөлінген құжаттар бар болса, солар негізгі дереккөз болады.
                 portalChunksRef.onSnapshot((snapshot) => {
-                    const hasChunkedData = snapshot.docs.some(doc => doc.id === '__meta__');
+                    const hasChunkedData = snapshot.docs.some(doc => doc.id === 'metadata');
                     if (hasChunkedData) {
                         chunkedStorageActive = true;
                         applyChunkedSnapshot(snapshot.docs);
@@ -1403,7 +1403,7 @@
             try {
                 const batch = portalDb.batch();
                 const existing = await portalChunksRef.get();
-                const keepIds = new Set(['__meta__']);
+                const keepIds = new Set(['metadata']);
                 Object.entries(payload).forEach(([key, records]) => {
                     const chunks = splitTextIntoChunks(JSON.stringify(records));
                     chunks.forEach((content, index) => {
@@ -1418,7 +1418,7 @@
                         });
                     });
                 });
-                batch.set(portalChunksRef.doc('__meta__'), {
+                batch.set(portalChunksRef.doc('metadata'), {
                     schemaVersion: 1,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
