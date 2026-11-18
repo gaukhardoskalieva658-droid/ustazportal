@@ -1270,6 +1270,40 @@
         </div>
     </div>
 
+    <!-- MODAL: TEACHER EDUCATION QUALITY PERCENTAGE -->
+    <div id="modal-teacher-quality" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-base font-bold text-slate-900">Білім сапасы көрсеткішін енгізу</h3>
+                <button type="button" onclick="closeModal('modal-teacher-quality')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-teacher-quality" onsubmit="saveTeacherQuality(event)" class="space-y-4 text-sm">
+                <input type="hidden" id="teacher-quality-teacher-id">
+                <div class="rounded-xl bg-slate-50 border px-3 py-2">
+                    <p class="text-xs text-slate-500">Педагог</p>
+                    <p id="teacher-quality-teacher-name" class="font-bold text-slate-800"></p>
+                </div>
+                <div>
+                    <label for="teacher-quality-percent" class="block text-xs font-semibold text-slate-700 mb-1">Білім сапасы (%) *</label>
+                    <input id="teacher-quality-percent" type="number" required min="0" max="100" step="0.1" inputmode="decimal" placeholder="Мысалы: 65" class="w-full px-3 py-3 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none text-lg font-bold">
+                    <p class="text-[11px] text-slate-500 mt-2">Тоқсан сайын осы көрсеткішті жаңартып отырасыз. Жаңа мән алдыңғы мәннің орнына сақталады.</p>
+                </div>
+                <div class="rounded-xl bg-indigo-50 border border-indigo-100 p-3 text-xs text-indigo-900 space-y-1">
+                    <p class="font-bold mb-1">Ұпай есептеу тәртібі:</p>
+                    <p>40%-дан төмен — 0 ұпай</p>
+                    <p>40%–49,9% — 1 ұпай</p>
+                    <p>50%–59,9% — 2 ұпай</p>
+                    <p>60%–70% — 3 ұпай</p>
+                    <p>70%-дан жоғары — 4 ұпай</p>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-teacher-quality')" class="px-4 py-2 rounded-xl border text-slate-600">Бас тарту</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold">Сақтау</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: TEACHER DETAIL PROFILE -->
     <div id="modal-teacher-detail" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
@@ -1316,6 +1350,13 @@
                     <button type="button" onclick="openAddQualityLessonForCurrentTeacher()" class="admin-only hidden text-xs text-emerald-600 font-semibold hover:underline">+ Ашық сабақ бағалау</button>
                 </div>
                 <ul id="detail-quality-lessons-list" class="space-y-2 text-xs"></ul>
+            </div>
+            <div class="space-y-3 pt-3 border-t border-slate-100">
+                <div class="flex items-center justify-between gap-2">
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Білім сапасы</h4>
+                    <button type="button" onclick="openTeacherQualityEditor()" class="admin-only hidden text-xs text-indigo-600 font-semibold hover:underline">+ Енгізу / жаңарту</button>
+                </div>
+                <div id="detail-teacher-quality" class="text-xs"></div>
             </div>
         </div>
     </div>
@@ -1386,6 +1427,7 @@
         let classQuality = []; // Бұрынғы сыныптық білім сапасы деректері; өшірілмейді.
         let experienceSharing = [];
         let qualityLessons = [];
+        let teacherQuality = []; // Әр педагогтің соңғы енгізілген білім сапасы пайызы және ұпайы.
         let editingExperienceId = null;
         let editingQualityLessonId = null;
         let editingClassQualityId = null;
@@ -1456,6 +1498,7 @@
                 classQuality,
                 experienceSharing,
                 qualityLessons,
+                teacherQuality,
                 exportDate: new Date().toISOString()
             };
             const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
@@ -1486,6 +1529,8 @@
                         classQuality = Array.isArray(data.classQuality) ? data.classQuality : classQuality;
                         experienceSharing = Array.isArray(data.experienceSharing) ? data.experienceSharing : [];
                         qualityLessons = Array.isArray(data.qualityLessons) ? data.qualityLessons : [];
+                        // Ескі резервтік көшірмелерде teacherQuality болмауы мүмкін; ондайда бар деректі сақтаймыз.
+                        teacherQuality = Array.isArray(data.teacherQuality) ? data.teacherQuality : teacherQuality;
                         saveData();
                         alert('Мәліметтер сәтті қалпына келтірілді!');
                     } else {
@@ -1519,8 +1564,8 @@
         }
 
         function applyChunkedSnapshot(snapshot) {
-            const grouped = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [], experienceSharing: [], qualityLessons: [] };
-            const parts = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [], experienceSharing: [], qualityLessons: [] };
+            const grouped = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [], experienceSharing: [], qualityLessons: [], teacherQuality: [] };
+            const parts = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [], experienceSharing: [], qualityLessons: [], teacherQuality: [] };
             snapshot.forEach((doc) => {
                 if (doc.id === 'metadata') return;
                 const item = doc.data() || {};
@@ -1548,6 +1593,7 @@
             classQuality = grouped.classQuality;
             experienceSharing = grouped.experienceSharing;
             qualityLessons = grouped.qualityLessons;
+            teacherQuality = grouped.teacherQuality;
             renderAll();
         }
 
@@ -1560,6 +1606,7 @@
             classQuality = [];
             experienceSharing = [];
             qualityLessons = [];
+            teacherQuality = [];
             renderAll();
 
             if (!portalSnapshotStarted) {
@@ -1589,6 +1636,7 @@
                         classQuality = Array.isArray(data.classQuality) ? data.classQuality : [];
                         experienceSharing = Array.isArray(data.experienceSharing) ? data.experienceSharing : [];
                         qualityLessons = Array.isArray(data.qualityLessons) ? data.qualityLessons : [];
+                        teacherQuality = Array.isArray(data.teacherQuality) ? data.teacherQuality : [];
                     } else {
                         teachers = [];
                         achievements = [];
@@ -1598,6 +1646,7 @@
                         classQuality = [];
                         experienceSharing = [];
                         qualityLessons = [];
+                        teacherQuality = [];
                     }
                     renderAll();
                 }, (error) => {
@@ -1612,7 +1661,7 @@
                 alert('Мәліметті тек әкімші өзгерте алады.');
                 return;
             }
-            const payload = { teachers, achievements, awards, courses, educationQuality, classQuality, experienceSharing, qualityLessons };
+            const payload = { teachers, achievements, awards, courses, educationQuality, classQuality, experienceSharing, qualityLessons, teacherQuality };
             try {
                 const batch = portalDb.batch();
                 const existing = await portalChunksRef.get();
@@ -1641,9 +1690,11 @@
                 await batch.commit();
                 chunkedStorageActive = true;
                 renderAll();
+                return true;
             } catch (error) {
                 console.error('Firestore сақтау қатесі:', error);
                 alert('Мәліметті сақтау мүмкін болмады. Интернетті және Firebase Rules ережелерін тексеріңіз.');
+                return false;
             }
         }
 
@@ -1664,6 +1715,20 @@
             return courses.filter(c => c.teacherId === teacherId).length * 1;
         }
 
+        function calculateTeacherQualityPoints(percent) {
+            const value = Number(percent);
+            if (!Number.isFinite(value) || value < 0 || value > 100) return 0;
+            if (value > 70) return 4;
+            if (value >= 60) return 3;
+            if (value >= 50) return 2;
+            if (value >= 40) return 1;
+            return 0;
+        }
+
+        function getTeacherQualityRecord(teacherId) {
+            return teacherQuality.find(item => item.teacherId === teacherId) || null;
+        }
+
         function getTeacherPoints(teacherId) {
             const achPts = achievements
                 .filter(a => a.teacherId === teacherId)
@@ -1678,8 +1743,10 @@
             const lessonPts = qualityLessons
                 .filter(item => item.teacherId === teacherId)
                 .reduce((sum, item) => sum + Math.max(1, Math.min(5, Number(item.score) || 0)), 0);
+            const qualityRecord = getTeacherQualityRecord(teacherId);
+            const educationQualityPts = qualityRecord ? calculateTeacherQualityPoints(qualityRecord.percent) : 0;
 
-            return achPts + awardPts + coursePts + experiencePts + lessonPts;
+            return achPts + awardPts + coursePts + experiencePts + lessonPts + educationQualityPts;
         }
 
         function getCourseStatus(teacherId) {
@@ -2403,7 +2470,66 @@
                 </li>
             `).join('') : `<li class="text-slate-400 italic">Ашық сабақтар әзірге бағаланбаған.</li>`;
 
+            const teacherQualityBox = document.getElementById('detail-teacher-quality');
+            const qualityRecord = getTeacherQualityRecord(t.id);
+            if (qualityRecord) {
+                const qualityPercent = Number(qualityRecord.percent);
+                const qualityPoints = calculateTeacherQualityPoints(qualityPercent);
+                teacherQualityBox.innerHTML = `
+                    <div class="rounded-xl bg-indigo-50 border border-indigo-100 p-3 flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-[10px] text-indigo-700 font-semibold">Соңғы енгізілген білім сапасы</p>
+                            <p class="text-2xl font-extrabold text-slate-900">${qualityPercent.toLocaleString('kk-KZ')}%</p>
+                            <p class="text-[10px] text-slate-500 mt-1">Жаңартылған күні: ${escapeQualityHtml(String(qualityRecord.updatedAt || '').slice(0, 10) || '—')}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-block rounded-full bg-white border border-indigo-200 px-3 py-1.5 text-sm font-extrabold text-indigo-700">+${qualityPoints} ұпай</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                teacherQualityBox.innerHTML = `<div class="rounded-xl bg-slate-50 border p-3 text-slate-500">Білім сапасы көрсеткіші әлі енгізілмеген. Енгізілген соң пайызға сәйкес ұпай автоматты есептеледі.</div>`;
+            }
+
             document.getElementById('modal-teacher-detail').classList.remove('hidden');
+        }
+
+        function openTeacherQualityEditor() {
+            if (!isAdmin || !currentDetailTeacherId) return;
+            const teacher = teachers.find(item => item.id === currentDetailTeacherId);
+            if (!teacher) return;
+            const record = getTeacherQualityRecord(currentDetailTeacherId);
+            document.getElementById('form-teacher-quality').reset();
+            document.getElementById('teacher-quality-teacher-id').value = currentDetailTeacherId;
+            document.getElementById('teacher-quality-teacher-name').textContent = teacher.name;
+            document.getElementById('teacher-quality-percent').value = record ? record.percent : '';
+            document.getElementById('modal-teacher-quality').classList.remove('hidden');
+        }
+
+        async function saveTeacherQuality(event) {
+            event.preventDefault();
+            if (!isAdmin) return;
+            const teacherId = document.getElementById('teacher-quality-teacher-id').value;
+            const percent = Number(document.getElementById('teacher-quality-percent').value);
+            if (!teacherId || !Number.isFinite(percent) || percent < 0 || percent > 100) {
+                alert('Білім сапасын 0 мен 100 аралығында пайызбен енгізіңіз.');
+                return;
+            }
+            const existingRecord = getTeacherQualityRecord(teacherId);
+            const updatedRecord = {
+                id: existingRecord?.id || ('tq_' + teacherId),
+                teacherId,
+                percent,
+                updatedAt: new Date().toISOString()
+            };
+            // Бір педагогке тек соңғы енгізілген пайыз сақталады; тоқсан сайын осы мәнді жаңартасыз.
+            teacherQuality = teacherQuality.filter(item => item.teacherId !== teacherId);
+            teacherQuality.push(updatedRecord);
+
+            const saved = await saveData();
+            if (!saved) return;
+            closeModal('modal-teacher-quality');
+            if (currentDetailTeacherId) viewTeacherDetail(currentDetailTeacherId);
         }
 
         function openAddExperienceModal() {
