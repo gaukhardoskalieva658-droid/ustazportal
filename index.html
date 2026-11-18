@@ -111,9 +111,9 @@
                     <span>Курстар</span>
                     <span id="nav-course-badge" class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">3</span>
                 </button>
-                <button onclick="switchTab('education-quality')" id="tab-education-quality" class="nav-tab text-slate-600 hover:text-slate-900 border-transparent whitespace-nowrap py-2 px-3 border-b-2 font-medium flex items-center space-x-2">
-                    <i class="fa-solid fa-chart-column"></i>
-                    <span>Білім сапасы</span>
+                <button onclick="switchTab('experience-sharing')" id="tab-experience-sharing" class="nav-tab text-slate-600 hover:text-slate-900 border-transparent whitespace-nowrap py-2 px-3 border-b-2 font-medium flex items-center space-x-2">
+                    <i class="fa-solid fa-person-chalkboard"></i>
+                    <span>Тәжірибе тарату</span>
                 </button>
             </div>
         </div>
@@ -890,83 +890,49 @@
 
     
 
-        <!-- TAB 7: EDUCATION QUALITY -->
-        <section id="section-education-quality" class="tab-section hidden space-y-6">
+        <!-- TAB 7: EXPERIENCE SHARING -->
+        <section id="section-experience-sharing" class="tab-section hidden space-y-6">
             <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-900">Сыныптар бойынша білім сапасы</h2>
-                        <p class="text-sm text-slate-500 mt-1">Әр тоқсанда әр сыныптың жалпы білім сапасын пайызбен енгізіңіз. Мысалы: 2 А — 53%, 2 Ә — 60%.</p>
+                        <h2 class="text-lg font-bold text-slate-900">Педагогтердің тәжірибе таратуы</h2>
+                        <p class="text-sm text-slate-500 mt-1">Семинар, конференция, форум, вебинар және әдістемелік іс-шараларда баяндама жасау деректері тіркеледі. Әрбір тіркелген тәжірибе таратуға 1 ұпай беріледі.</p>
                     </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button type="button" onclick="exportQualityExcel()" class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700"><i class="fa-solid fa-file-excel mr-1"></i> Excel</button>
-                        <button type="button" onclick="exportQualityWord()" class="px-3 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"><i class="fa-solid fa-file-word mr-1"></i> Word</button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-                    <div>
-                        <label for="class-quality-year" class="block text-xs font-semibold text-slate-600 mb-1">Оқу жылы</label>
-                        <input id="class-quality-year" type="text" value="2026–2027" placeholder="2026–2027" oninput="renderClassQuality()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    </div>
-                    <div>
-                        <label for="class-quality-term" class="block text-xs font-semibold text-slate-600 mb-1">Тоқсан</label>
-                        <select id="class-quality-term" onchange="renderClassQuality()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
-                            <option value="1">I тоқсан</option>
-                            <option value="2">II тоқсан</option>
-                            <option value="3">III тоқсан</option>
-                            <option value="4">IV тоқсан</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="class-quality-class" class="block text-xs font-semibold text-slate-600 mb-1">Сынып</label>
-                        <input id="class-quality-class" type="text" placeholder="Мысалы: 2 А" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    </div>
-                    <div>
-                        <label for="class-quality-percent" class="block text-xs font-semibold text-slate-600 mb-1">Жалпы білім сапасы (%)</label>
-                        <input id="class-quality-percent" type="number" min="0" max="100" step="0.1" placeholder="53" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    </div>
-                </div>
-                <div class="mt-4 flex flex-col sm:flex-row justify-center gap-3">
-                    <button id="class-quality-save-btn" type="button" onclick="saveClassQualityRecord()" class="w-full sm:w-auto min-w-[220px] px-8 py-3 rounded-xl bg-brand-600 text-white text-base font-bold hover:bg-brand-700 shadow-md transition-all">
-                        <i class="fa-solid fa-floppy-disk mr-2"></i> САҚТАУ
-                    </button>
-                    <button type="button" onclick="resetClassQualityForm()" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50" title="Тазалау">
-                        <i class="fa-solid fa-rotate-left mr-1"></i> Өрістерді тазалау
+                    <button type="button" onclick="openAddExperienceModal()" class="admin-only hidden inline-flex items-center px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 shadow-sm whitespace-nowrap">
+                        <i class="fa-solid fa-plus mr-2"></i> Тәжірибе тарату қосу
                     </button>
                 </div>
-                <p class="text-xs text-slate-400 mt-3">Пайызды 0 мен 100 аралығында енгізіңіз. Әр сынып пен тоқсанға бір ғана жалпы көрсеткіш сақталады. Кейін сол жазбаны өңдеп жаңартуға болады.</p>
-                <p id="class-quality-edit-hint" class="hidden text-xs text-indigo-600 font-semibold mt-2">Жазба өңдеу режимінде. Өзгерісті сақтау үшін «Сақтау» батырмасын басыңыз.</p>
-            </div>
-
-            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-                <div class="mb-3">
-                    <h3 id="class-quality-quarter-title" class="font-bold text-slate-800">I тоқсан бойынша сыныптардың білім сапасы</h3>
-                    <p class="text-xs text-slate-400 mt-1">Таңдалған оқу жылы мен тоқсанда енгізілген сыныптардың жалпы көрсеткіштері.</p>
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="sm:col-span-2 relative">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="experience-search" oninput="renderExperienceSharing()" placeholder="Мұғалім, іс-шара немесе баяндама тақырыбын іздеу..." class="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <div class="rounded-xl bg-indigo-50 border border-indigo-100 px-4 py-2.5 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-indigo-700">Тіркелген тәжірибе саны</span>
+                        <strong id="experience-total-count" class="text-lg text-indigo-800">0</strong>
+                    </div>
                 </div>
-                <div class="h-72"><canvas id="classQualityQuarterChart"></canvas></div>
             </div>
-
-            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-                <h3 class="font-bold text-slate-800 mb-3">Таңдалған тоқсанның мәліметтері</h3>
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-slate-50 text-xs text-slate-500 uppercase border-b border-slate-100">
-                            <tr><th class="px-3 py-3">Сынып</th><th class="px-3 py-3">Білім сапасы</th><th class="px-3 py-3 text-right admin-only hidden">Әрекет</th></tr>
+                        <thead class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-100">
+                            <tr>
+                                <th class="px-5 py-3">№</th>
+                                <th class="px-5 py-3">Мұғалім</th>
+                                <th class="px-5 py-3">Іс-шара түрі / атауы</th>
+                                <th class="px-5 py-3">Баяндама тақырыбы</th>
+                                <th class="px-5 py-3">Деңгейі</th>
+                                <th class="px-5 py-3">Күні</th>
+                                <th class="px-5 py-3 text-center">Ұпай</th>
+                                <th class="px-5 py-3 text-right admin-only hidden">Әрекет</th>
+                            </tr>
                         </thead>
-                        <tbody id="class-quality-records-body" class="divide-y divide-slate-100">
-                            <tr><td colspan="3" class="px-3 py-6 text-center text-slate-400">Әзірге мәлімет енгізілмеген.</td></tr>
+                        <tbody id="experience-table-body" class="divide-y divide-slate-100">
+                            <tr><td colspan="8" class="px-5 py-8 text-center text-slate-400">Әзірге тәжірибе тарату деректері енгізілмеген.</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
-                <div class="mb-3">
-                    <h3 id="class-quality-year-title" class="font-bold text-slate-800">Оқу жылы бойынша тоқсандық салыстыру</h3>
-                    <p class="text-xs text-slate-400 mt-1">Жыл соңында I, II, III және IV тоқсандардың көрсеткіштері бір диаграммада салыстырылады. Әлі енгізілмеген тоқсан бос көрсетіледі.</p>
-                </div>
-                <div class="h-80"><canvas id="classQualityYearChart"></canvas></div>
             </div>
         </section>
 <!-- MODALS SECTION -->
@@ -1192,6 +1158,118 @@
         </div>
     </div>
 
+    <!-- MODAL: EXPERIENCE SHARING -->
+    <div id="modal-experience" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="experience-modal-title" class="text-base font-bold text-slate-900">Тәжірибе таратуды тіркеу</h3>
+                <button type="button" onclick="closeModal('modal-experience')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-experience" onsubmit="saveExperience(event)" class="space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Мұғалімді таңдаңыз *</label>
+                    <select id="experience-teacher-id" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Іс-шара түрі *</label>
+                    <select id="experience-type" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                        <option value="Семинар">Семинар</option>
+                        <option value="Конференция">Конференция</option>
+                        <option value="Форум">Форум</option>
+                        <option value="Вебинар">Вебинар</option>
+                        <option value="Педагогикалық оқулар">Педагогикалық оқулар</option>
+                        <option value="Шеберлік сыныбы">Шеберлік сыныбы</option>
+                        <option value="Әдістемелік отырыс">Әдістемелік отырыс</option>
+                        <option value="Басқа">Басқа</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Іс-шараның атауы *</label>
+                    <input id="experience-event-title" type="text" required placeholder="Мысалы: «Білім берудегі цифрлық трансформация» конференциясы" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Баяндама / таратылған тәжірибе тақырыбы *</label>
+                    <input id="experience-topic" type="text" required placeholder="Баяндаманың тақырыбын жазыңыз" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Өткізілген күні *</label>
+                        <input id="experience-date" type="date" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Деңгейі *</label>
+                        <select id="experience-level" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                            <option value="Мектепшілік">Мектепшілік</option>
+                            <option value="Аудандық/Қалалық">Аудандық / Қалалық</option>
+                            <option value="Облыстық">Облыстық</option>
+                            <option value="Республикалық">Республикалық</option>
+                            <option value="Халықаралық">Халықаралық</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Ұйымдастырушы / өткізу орны</label>
+                    <input id="experience-organizer" type="text" placeholder="Ұйым немесе мекеме атауы (міндетті емес)" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div class="rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2 text-xs text-emerald-800 font-semibold">Әрбір тіркелген тәжірибе таратуға автоматты түрде +1 ұпай есептеледі.</div>
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-experience')" class="px-4 py-2 rounded-xl border text-slate-600">Бас тарту</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold">Сақтау</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: QUALITY LESSON EVALUATION -->
+    <div id="modal-quality-lesson" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="quality-lesson-modal-title" class="text-base font-bold text-slate-900">Ашық сабақты бағалау</h3>
+                <button type="button" onclick="closeModal('modal-quality-lesson')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-quality-lesson" onsubmit="saveQualityLesson(event)" class="space-y-4 text-sm">
+                <input type="hidden" id="quality-lesson-id">
+                <input type="hidden" id="quality-lesson-teacher-id">
+                <div class="rounded-xl bg-slate-50 border px-3 py-2">
+                    <p class="text-xs text-slate-500">Мұғалім</p>
+                    <p id="quality-lesson-teacher-name" class="font-bold text-slate-800"></p>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Ашық сабақтың тақырыбы *</label>
+                    <input id="quality-lesson-topic" type="text" required placeholder="Сабақ тақырыбын енгізіңіз" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Сыныбы *</label>
+                        <input id="quality-lesson-class" type="text" required placeholder="Мысалы: 7 А" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Өткізілген күні *</label>
+                        <input id="quality-lesson-date" type="date" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Мектеп әкімшілігінің бағасы (1–5 ұпай) *</label>
+                    <select id="quality-lesson-score" required class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none">
+                        <option value="5">5 ұпай — өте жоғары деңгей</option>
+                        <option value="4">4 ұпай — жоғары деңгей</option>
+                        <option value="3">3 ұпай — жеткілікті деңгей</option>
+                        <option value="2">2 ұпай — қосымша жетілдіру қажет</option>
+                        <option value="1">1 ұпай — төмен деңгей</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Әкімшілік пікірі / ұсынысы</label>
+                    <textarea id="quality-lesson-comment" rows="2" placeholder="Қысқаша кері байланыс (міндетті емес)" class="w-full px-3 py-2 border rounded-xl focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-quality-lesson')" class="px-4 py-2 rounded-xl border text-slate-600">Бас тарту</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold">Бағаны сақтау</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: TEACHER DETAIL PROFILE -->
     <div id="modal-teacher-detail" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
@@ -1224,6 +1302,20 @@
             <div class="space-y-3 pt-2">
                 <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Өткен курстары</h4>
                 <ul id="detail-courses-list" class="space-y-2 text-xs"></ul>
+            </div>
+            <div class="space-y-3 pt-2">
+                <div class="flex items-center justify-between gap-2">
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Тәжірибе таратуы</h4>
+                    <button type="button" onclick="openAddExperienceForCurrentTeacher()" class="admin-only hidden text-xs text-indigo-600 font-semibold hover:underline">+ Қосу</button>
+                </div>
+                <ul id="detail-experience-list" class="space-y-2 text-xs"></ul>
+            </div>
+            <div class="space-y-3 pt-2">
+                <div class="flex items-center justify-between gap-2">
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Сапалы сабақ – жетістік кепілі</h4>
+                    <button type="button" onclick="openAddQualityLessonForCurrentTeacher()" class="admin-only hidden text-xs text-emerald-600 font-semibold hover:underline">+ Ашық сабақ бағалау</button>
+                </div>
+                <ul id="detail-quality-lessons-list" class="space-y-2 text-xs"></ul>
             </div>
         </div>
     </div>
@@ -1290,8 +1382,12 @@
         let achievements = [];
         let awards = [];
         let courses = [];
-        let educationQuality = []; // Бұрынғы пәндік жазбалар; үйлесімділік үшін сақталады, интерфейсте қолданылмайды.
-        let classQuality = [];
+        let educationQuality = []; // Бұрынғы мәліметтер; үйлесімділік үшін сақталады.
+        let classQuality = []; // Бұрынғы сыныптық білім сапасы деректері; өшірілмейді.
+        let experienceSharing = [];
+        let qualityLessons = [];
+        let editingExperienceId = null;
+        let editingQualityLessonId = null;
         let editingClassQualityId = null;
         let classQualityQuarterChart = null;
         let classQualityYearChart = null;
@@ -1331,7 +1427,7 @@
             if (tabName === 'achievements') renderAchievements();
             if (tabName === 'awards') renderAwards();
             if (tabName === 'courses') renderCourses();
-            if (tabName === 'education-quality') renderClassQuality();
+            if (tabName === 'experience-sharing') renderExperienceSharing();
         }
         
 
@@ -1358,6 +1454,8 @@
                 courses,
                 educationQuality,
                 classQuality,
+                experienceSharing,
+                qualityLessons,
                 exportDate: new Date().toISOString()
             };
             const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
@@ -1385,7 +1483,9 @@
                         awards = data.awards || [];
                         courses = data.courses || [];
                         educationQuality = Array.isArray(data.educationQuality) ? data.educationQuality : [];
-                        classQuality = Array.isArray(data.classQuality) ? data.classQuality : [];
+                        classQuality = Array.isArray(data.classQuality) ? data.classQuality : classQuality;
+                        experienceSharing = Array.isArray(data.experienceSharing) ? data.experienceSharing : [];
+                        qualityLessons = Array.isArray(data.qualityLessons) ? data.qualityLessons : [];
                         saveData();
                         alert('Мәліметтер сәтті қалпына келтірілді!');
                     } else {
@@ -1419,8 +1519,8 @@
         }
 
         function applyChunkedSnapshot(snapshot) {
-            const grouped = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [] };
-            const parts = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [] };
+            const grouped = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [], experienceSharing: [], qualityLessons: [] };
+            const parts = { teachers: [], achievements: [], awards: [], courses: [], educationQuality: [], classQuality: [], experienceSharing: [], qualityLessons: [] };
             snapshot.forEach((doc) => {
                 if (doc.id === 'metadata') return;
                 const item = doc.data() || {};
@@ -1446,6 +1546,8 @@
             courses = grouped.courses;
             educationQuality = grouped.educationQuality;
             classQuality = grouped.classQuality;
+            experienceSharing = grouped.experienceSharing;
+            qualityLessons = grouped.qualityLessons;
             renderAll();
         }
 
@@ -1456,6 +1558,8 @@
             courses = [];
             educationQuality = [];
             classQuality = [];
+            experienceSharing = [];
+            qualityLessons = [];
             renderAll();
 
             if (!portalSnapshotStarted) {
@@ -1483,6 +1587,8 @@
                         courses = Array.isArray(data.courses) ? data.courses : [];
                         educationQuality = Array.isArray(data.educationQuality) ? data.educationQuality : [];
                         classQuality = Array.isArray(data.classQuality) ? data.classQuality : [];
+                        experienceSharing = Array.isArray(data.experienceSharing) ? data.experienceSharing : [];
+                        qualityLessons = Array.isArray(data.qualityLessons) ? data.qualityLessons : [];
                     } else {
                         teachers = [];
                         achievements = [];
@@ -1490,6 +1596,8 @@
                         courses = [];
                         educationQuality = [];
                         classQuality = [];
+                        experienceSharing = [];
+                        qualityLessons = [];
                     }
                     renderAll();
                 }, (error) => {
@@ -1504,7 +1612,7 @@
                 alert('Мәліметті тек әкімші өзгерте алады.');
                 return;
             }
-            const payload = { teachers, achievements, awards, courses, educationQuality, classQuality };
+            const payload = { teachers, achievements, awards, courses, educationQuality, classQuality, experienceSharing, qualityLessons };
             try {
                 const batch = portalDb.batch();
                 const existing = await portalChunksRef.get();
@@ -1524,7 +1632,7 @@
                     });
                 });
                 batch.set(portalChunksRef.doc('metadata'), {
-                    schemaVersion: 1,
+                    schemaVersion: 2,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 existing.forEach((doc) => {
@@ -1566,8 +1674,12 @@
                 .reduce((sum, item) => sum + calculateAwardPoints(item.type, item.level), 0);
 
             const coursePts = calculateCoursePoints(teacherId);
+            const experiencePts = experienceSharing.filter(item => item.teacherId === teacherId).length;
+            const lessonPts = qualityLessons
+                .filter(item => item.teacherId === teacherId)
+                .reduce((sum, item) => sum + Math.max(1, Math.min(5, Number(item.score) || 0)), 0);
 
-            return achPts + awardPts + coursePts;
+            return achPts + awardPts + coursePts + experiencePts + lessonPts;
         }
 
         function getCourseStatus(teacherId) {
@@ -1723,12 +1835,14 @@
             const achSelect = document.getElementById('achievement-teacher-id');
             const awdSelect = document.getElementById('award-teacher-id');
             const crsSelect = document.getElementById('course-teacher-id');
+            const expSelect = document.getElementById('experience-teacher-id');
 
-            const options = teachers.map(t => `<option value="${t.id}">${t.name} (${t.subject})</option>`).join('');
+            const options = teachers.map(t => `<option value="${escapeQualityHtml(t.id)}">${escapeQualityHtml(t.name)} (${escapeQualityHtml(t.subject)})</option>`).join('');
 
             if (achSelect) achSelect.innerHTML = options;
             if (awdSelect) awdSelect.innerHTML = options;
             if (crsSelect) crsSelect.innerHTML = options;
+            if (expSelect) expSelect.innerHTML = options;
         }
 
         function openAddTeacherModal() {
@@ -2255,7 +2369,213 @@
                 </li>
             `).join('') : `<li class="text-slate-400 italic">Курстар тіркелмеген.</li>`;
 
+            const expList = document.getElementById('detail-experience-list');
+            const teacherExperiences = experienceSharing.filter(item => item.teacherId === t.id)
+                .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+            expList.innerHTML = teacherExperiences.length ? teacherExperiences.map(item => `
+                <li class="p-2.5 rounded-xl bg-slate-50 border flex justify-between items-start gap-2">
+                    <div class="min-w-0">
+                        <p class="font-semibold text-slate-800">${escapeQualityHtml(item.topic || item.eventTitle || '')}</p>
+                        <p class="text-[10px] text-slate-400">${escapeQualityHtml(item.type || '')} · ${escapeQualityHtml(item.eventTitle || '')} · ${escapeQualityHtml(item.date || '')}</p>
+                        <p class="text-[10px] text-slate-400">${escapeQualityHtml(item.level || '')}${item.organizer ? ' · ' + escapeQualityHtml(item.organizer) : ''}</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <span class="font-bold text-indigo-600 text-xs">+1 ұпай</span>
+                        ${isAdmin ? `<button type="button" onclick="editExperience('${item.id}')" class="text-xs text-indigo-600">Өңдеу</button><button type="button" onclick="deleteExperience('${item.id}')" class="text-xs text-red-600">Жою</button>` : ''}
+                    </div>
+                </li>
+            `).join('') : `<li class="text-slate-400 italic">Тәжірибе тарату деректері тіркелмеген.</li>`;
+
+            const lessonList = document.getElementById('detail-quality-lessons-list');
+            const teacherLessons = qualityLessons.filter(item => item.teacherId === t.id)
+                .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+            lessonList.innerHTML = teacherLessons.length ? teacherLessons.map(item => `
+                <li class="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-100 flex justify-between items-start gap-2">
+                    <div class="min-w-0">
+                        <p class="font-semibold text-slate-800">${escapeQualityHtml(item.topic || '')}</p>
+                        <p class="text-[10px] text-slate-500">${escapeQualityHtml(item.className || '')} сынып · ${escapeQualityHtml(item.date || '')}</p>
+                        ${item.comment ? `<p class="text-[10px] text-slate-500 mt-1">${escapeQualityHtml(item.comment)}</p>` : ''}
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <span class="font-bold text-emerald-700 text-xs">${Number(item.score) || 0}/5 ұпай</span>
+                        ${isAdmin ? `<button type="button" onclick="editQualityLesson('${item.id}')" class="text-xs text-indigo-600">Өңдеу</button><button type="button" onclick="deleteQualityLesson('${item.id}')" class="text-xs text-red-600">Жою</button>` : ''}
+                    </div>
+                </li>
+            `).join('') : `<li class="text-slate-400 italic">Ашық сабақтар әзірге бағаланбаған.</li>`;
+
             document.getElementById('modal-teacher-detail').classList.remove('hidden');
+        }
+
+        function openAddExperienceModal() {
+            if (!isAdmin) return;
+            editingExperienceId = null;
+            document.getElementById('form-experience').reset();
+            populateTeacherSelects();
+            document.getElementById('experience-modal-title').innerText = 'Тәжірибе таратуды тіркеу';
+            document.querySelector('#form-experience button[type="submit"]').innerText = 'Сақтау';
+            document.getElementById('modal-experience').classList.remove('hidden');
+        }
+
+        function openAddExperienceForCurrentTeacher() {
+            if (!isAdmin || !currentDetailTeacherId) return;
+            openAddExperienceModal();
+            document.getElementById('experience-teacher-id').value = currentDetailTeacherId;
+        }
+
+        function editExperience(id) {
+            if (!isAdmin) return;
+            const item = experienceSharing.find(record => record.id === id);
+            if (!item) return;
+            editingExperienceId = id;
+            populateTeacherSelects();
+            document.getElementById('experience-teacher-id').value = item.teacherId;
+            document.getElementById('experience-type').value = item.type || 'Семинар';
+            document.getElementById('experience-event-title').value = item.eventTitle || '';
+            document.getElementById('experience-topic').value = item.topic || '';
+            document.getElementById('experience-date').value = item.date || '';
+            document.getElementById('experience-level').value = item.level || 'Мектепшілік';
+            document.getElementById('experience-organizer').value = item.organizer || '';
+            document.getElementById('experience-modal-title').innerText = 'Тәжірибе тарату мәліметін өңдеу';
+            document.querySelector('#form-experience button[type="submit"]').innerText = 'Өзгерісті сақтау';
+            document.getElementById('modal-experience').classList.remove('hidden');
+        }
+
+        function saveExperience(event) {
+            event.preventDefault();
+            if (!isAdmin) return;
+            const item = {
+                id: editingExperienceId || ('exp_' + Date.now()),
+                teacherId: document.getElementById('experience-teacher-id').value,
+                type: document.getElementById('experience-type').value,
+                eventTitle: document.getElementById('experience-event-title').value.trim(),
+                topic: document.getElementById('experience-topic').value.trim(),
+                date: document.getElementById('experience-date').value,
+                level: document.getElementById('experience-level').value,
+                organizer: document.getElementById('experience-organizer').value.trim()
+            };
+            if (!item.teacherId || !item.eventTitle || !item.topic || !item.date) {
+                alert('Міндетті өрістерді толтырыңыз.');
+                return;
+            }
+            if (editingExperienceId) experienceSharing = experienceSharing.map(record => record.id === editingExperienceId ? item : record);
+            else experienceSharing.push(item);
+            editingExperienceId = null;
+            saveData();
+            closeModal('modal-experience');
+            renderExperienceSharing();
+            renderAll();
+            if (currentDetailTeacherId) viewTeacherDetail(currentDetailTeacherId);
+        }
+
+        function deleteExperience(id) {
+            if (!isAdmin || !confirm('Осы тәжірибе тарату жазбасын жоясыз ба?')) return;
+            experienceSharing = experienceSharing.filter(item => item.id !== id);
+            saveData();
+            renderExperienceSharing();
+            renderAll();
+            if (currentDetailTeacherId) viewTeacherDetail(currentDetailTeacherId);
+        }
+
+        function renderExperienceSharing() {
+            const tbody = document.getElementById('experience-table-body');
+            if (!tbody) return;
+            const search = (document.getElementById('experience-search')?.value || '').toLowerCase().trim();
+            const list = [...experienceSharing].sort((a, b) => String(b.date || '').localeCompare(String(a.date || ''))).filter(item => {
+                const teacher = teachers.find(t => t.id === item.teacherId);
+                const haystack = [teacher?.name, item.type, item.eventTitle, item.topic, item.level, item.organizer, item.date].join(' ').toLowerCase();
+                return haystack.includes(search);
+            });
+            const totalEl = document.getElementById('experience-total-count');
+            if (totalEl) totalEl.textContent = String(experienceSharing.length);
+            if (!list.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="px-5 py-8 text-center text-slate-400">Іздеуге сәйкес жазба табылмады немесе тәжірибе тарату деректері әлі енгізілмеген.</td></tr>';
+                updateAdminUI();
+                return;
+            }
+            tbody.innerHTML = list.map((item, index) => {
+                const teacher = teachers.find(t => t.id === item.teacherId) || { name: 'Өшірілген мұғалім' };
+                return `<tr class="hover:bg-slate-50/80">
+                    <td class="px-5 py-3 font-bold text-slate-400">${index + 1}</td>
+                    <td class="px-5 py-3 font-semibold text-slate-900">${escapeQualityHtml(teacher.name)}</td>
+                    <td class="px-5 py-3"><span class="text-xs font-semibold text-indigo-700">${escapeQualityHtml(item.type || '')}</span><p class="text-xs text-slate-600 mt-1">${escapeQualityHtml(item.eventTitle || '')}</p></td>
+                    <td class="px-5 py-3 text-xs text-slate-700">${escapeQualityHtml(item.topic || '')}</td>
+                    <td class="px-5 py-3 text-xs text-slate-600">${escapeQualityHtml(item.level || '')}</td>
+                    <td class="px-5 py-3 text-xs text-slate-500 whitespace-nowrap">${escapeQualityHtml(item.date || '')}</td>
+                    <td class="px-5 py-3 text-center font-bold text-emerald-600">+1</td>
+                    <td class="px-5 py-3 text-right admin-only ${isAdmin ? '' : 'hidden'} whitespace-nowrap"><button type="button" onclick="editExperience('${item.id}')" class="text-xs text-indigo-600 font-semibold mr-2">Өңдеу</button><button type="button" onclick="deleteExperience('${item.id}')" class="text-xs text-red-600 font-semibold">Жою</button></td>
+                </tr>`;
+            }).join('');
+            updateAdminUI();
+        }
+
+        function openAddQualityLessonForCurrentTeacher() {
+            if (!isAdmin || !currentDetailTeacherId) return;
+            editingQualityLessonId = null;
+            document.getElementById('form-quality-lesson').reset();
+            document.getElementById('quality-lesson-id').value = '';
+            document.getElementById('quality-lesson-teacher-id').value = currentDetailTeacherId;
+            const teacher = teachers.find(t => t.id === currentDetailTeacherId);
+            document.getElementById('quality-lesson-teacher-name').textContent = teacher ? teacher.name : '';
+            document.getElementById('quality-lesson-modal-title').innerText = 'Ашық сабақты бағалау';
+            document.querySelector('#form-quality-lesson button[type="submit"]').innerText = 'Бағаны сақтау';
+            document.getElementById('modal-quality-lesson').classList.remove('hidden');
+        }
+
+        function editQualityLesson(id) {
+            if (!isAdmin) return;
+            const item = qualityLessons.find(record => record.id === id);
+            if (!item) return;
+            editingQualityLessonId = id;
+            document.getElementById('quality-lesson-id').value = id;
+            document.getElementById('quality-lesson-teacher-id').value = item.teacherId;
+            const teacher = teachers.find(t => t.id === item.teacherId);
+            document.getElementById('quality-lesson-teacher-name').textContent = teacher ? teacher.name : '';
+            document.getElementById('quality-lesson-topic').value = item.topic || '';
+            document.getElementById('quality-lesson-class').value = item.className || '';
+            document.getElementById('quality-lesson-date').value = item.date || '';
+            document.getElementById('quality-lesson-score').value = String(item.score || 5);
+            document.getElementById('quality-lesson-comment').value = item.comment || '';
+            document.getElementById('quality-lesson-modal-title').innerText = 'Ашық сабақ бағасын өңдеу';
+            document.querySelector('#form-quality-lesson button[type="submit"]').innerText = 'Өзгерісті сақтау';
+            document.getElementById('modal-quality-lesson').classList.remove('hidden');
+        }
+
+        function saveQualityLesson(event) {
+            event.preventDefault();
+            if (!isAdmin) return;
+            const score = Number(document.getElementById('quality-lesson-score').value);
+            if (!Number.isInteger(score) || score < 1 || score > 5) {
+                alert('Баға 1 мен 5 аралығында болуы керек.');
+                return;
+            }
+            const item = {
+                id: editingQualityLessonId || ('ql_' + Date.now()),
+                teacherId: document.getElementById('quality-lesson-teacher-id').value,
+                topic: document.getElementById('quality-lesson-topic').value.trim(),
+                className: document.getElementById('quality-lesson-class').value.trim(),
+                date: document.getElementById('quality-lesson-date').value,
+                score,
+                comment: document.getElementById('quality-lesson-comment').value.trim()
+            };
+            if (!item.teacherId || !item.topic || !item.className || !item.date) {
+                alert('Міндетті өрістерді толтырыңыз.');
+                return;
+            }
+            if (editingQualityLessonId) qualityLessons = qualityLessons.map(record => record.id === editingQualityLessonId ? item : record);
+            else qualityLessons.push(item);
+            editingQualityLessonId = null;
+            saveData();
+            closeModal('modal-quality-lesson');
+            renderAll();
+            if (currentDetailTeacherId) viewTeacherDetail(currentDetailTeacherId);
+        }
+
+        function deleteQualityLesson(id) {
+            if (!isAdmin || !confirm('Осы ашық сабақ бағасын өшіресіз бе?')) return;
+            qualityLessons = qualityLessons.filter(item => item.id !== id);
+            saveData();
+            renderAll();
+            if (currentDetailTeacherId) viewTeacherDetail(currentDetailTeacherId);
         }
 
         function currentClassQualityYear() {
@@ -2476,7 +2796,7 @@
             renderAchievements();
             renderAwards();
             renderCourses();
-            renderClassQuality();
+            renderExperienceSharing();
             populateTeacherSelects();
         }
 
